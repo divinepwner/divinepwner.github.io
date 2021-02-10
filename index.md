@@ -1,5 +1,5 @@
 ---
-title: pwn stories
+title: /index
 layout: home
 permalink: /
 ---
