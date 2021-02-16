@@ -42,13 +42,13 @@ Lets extract the firmware!
 
 First thing first, always check file type with `"file"` command on Linux and go after results.
 
-![firmware's first status](../images/1-file_command.png)
+![firmware's first status](/images/1-file_command.png)
 
 As shown above, its a bzip2 compressed file so we can easily decompress it.
 
 Just use `bunzip2 fw.ins` after that we have `fw` file. 
 
-![POSIX tar file](../images/2-file_command2.png)
+![POSIX tar file](/images/2-file_command2.png)
 
 We can extract it with command `tar -xvf fw`
 
@@ -56,23 +56,23 @@ After that command, we have all firmware files including web page of the device.
 
 Lets read some PHP!
 
-![AES Encryption](../images/3-php_encrypted.png)
+![AES Encryption](/images/3-php_encrypted.png)
 
 Oppps. It seems encrypted.
 
 After a little bit of digging on the folders, we found out "php.ini" file under "etc" directory. After a bit of reading shitty shits on Binary Ninja, we found out it is using AES as an encryption method and you can find out AES key from "php\_terra\_master.so" file which is under "/usr/lib64/php/modules" directory.
 
-![AES Key File](../images/4-php_aes_key_file.png)
+![AES Key File](/images/4-php_aes_key_file.png)
 
 We sent file to the Binary Ninja to examine it and obtain AES keys to decrypt all PHP files.
 
-![AES Key Obtain](../images/5-aes-key-obtain.png)
+![AES Key Obtain](/images/5-aes-key-obtain.png)
 
 "screw_aes" function seems interesting so lets dive into it.
 
 Function calls another name named "pm9screw\_ext\_fopen". In this function we got AES key to decrypt all PHP files. But we realized that we should calculate MD5 of the key value to decrypt files.
 
-![AES Key Obtain](../images/6-aesKey_MD5call.png)
+![AES Key Obtain](/images/6-aesKey_MD5call.png)
 
 `PS: Decryption routine has changed after we successfully exploited their newly patched firmware and their new encryption routine. You can debug the whole encryption routine and write a script to decrypt all files. ;)`
 
