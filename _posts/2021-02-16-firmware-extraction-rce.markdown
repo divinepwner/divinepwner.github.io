@@ -69,7 +69,7 @@ Function calls another name named "pm9screw\_ext\_fopen". In this function we go
 
 ![AES Key Obtain](/images/fw-extraction-rce/6-aesKey_MD5call.png)
 
-```PS: Decryption routine has changed after we successfully exploited their newly patched firmware and their new encryption routine. You can debug the whole encryption routine and write a script to decrypt all files. ;)```
+PS: Decryption routine has changed after we successfully exploited their newly patched firmware and their new encryption routine. You can debug the whole encryption routine and write a script to decrypt all files. ;)
 
 So, let's dive into PHP files again.
 
