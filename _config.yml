@@ -12,6 +12,6 @@ style: light
 
 footer: 'follow on <a href="https://twitter.com/divinepwner">twitter</a>'
 
-# Build settings -- yeter aq
+# Build settings -- latest build nihayet aq
 markdown: kramdown
 remote_theme: divinepwner/jekyll-theme-console
