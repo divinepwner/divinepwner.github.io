@@ -19,40 +19,35 @@ ____
 The first part will contain firmware extraction and file decryption process, the other part will cover the PHP source code analysis and gaining RCE.
 
 
-
 First of all in the latest versions of the firmware file you are not able to reach out to system files anymore. In the latest fix, they converted their model to runtime extraction which means, when you boot-up the device it creates files in runtime. SAD.
 
 
-
-Enough shit talk. Lets pwn it.
-
+Enough shit talk. Let's pwn it.
 
 
 You should grab the firmware file from the TerraMaster website. You can reach out to the page by clicking [here](http://download.terra-master.com/download.php?lng=en&tid=177).
 
 
-
 You can choose any NAS device from the list. Every device runs the same system.
-
 
 
 After downloading the file, we should extract it. Binwalk is the best tool for that kind of job and it's widely used by iot/embedded researchers.
 
-Lets extract the firmware!
+Let's extract the firmware!
 
 First thing first, always check file type with `"file"` command on Linux and go after results.
 
 ![firmware's first status](/images/fw-extraction-rce/1-file_command.png)
 
-As shown above, its a bzip2 compressed file so we can easily decompress it.
+As shown above, it's a bzip2 compressed file so we can easily decompress it.
 
 Just use `bunzip2 fw.ins` after that we have `fw` file. 
 
 ![POSIX tar file](/images/fw-extraction-rce/2-file_command2.png)
 
-We can extract it with command `tar -xvf fw`
+We can extract it with the command `tar -xvf fw`
 
-After that command, we have all firmware files including web page of the device.
+After that command, we have all firmware files including the web page of the device.
 
 Lets read some PHP!
 
@@ -64,27 +59,27 @@ After a little bit of digging on the folders, we found out "php.ini" file under 
 
 ![AES Key File](/images/fw-extraction-rce/4-php_aes_key_file.png)
 
-We sent file to the Binary Ninja to examine it and obtain AES keys to decrypt all PHP files.
+We sent the file to the Binary Ninja to examine it and obtain AES keys to decrypt all PHP files.
 
 ![AES Key Obtain](/images/fw-extraction-rce/5-aes-key-obtain.png)
 
-"screw_aes" function seems interesting so lets dive into it.
+"screw_aes" function seems interesting so let's dive into it.
 
-Function calls another name named "pm9screw\_ext\_fopen". In this function we got AES key to decrypt all PHP files. But we realized that we should calculate MD5 of the key value to decrypt files.
+Function calls another name named "pm9screw\_ext\_fopen". In this function we got the AES key to decrypt all PHP files. But we realized that we should calculate MD5 of the key-value to decrypt files.
 
 ![AES Key Obtain](/images/fw-extraction-rce/6-aesKey_MD5call.png)
 
 ```PS: Decryption routine has changed after we successfully exploited their newly patched firmware and their new encryption routine. You can debug the whole encryption routine and write a script to decrypt all files. ;)```
 
-So, lets dive into PHP files again.
+So, let's dive into PHP files again.
 
 We r gonna skip all grep and other search methods like searching with regex from PHPStorm etc. 
 
 Just search for "bad" shits like shell_exec etc.
 
-After a bit searching for "bad" shits we found out "exportUser.php" file.
+After a bit of searching for "bad" shits, we found out "exportUser.php" file.
 
-Lets examine line 105:
+Let's examine line 105:
 
 ```php
 <?php
@@ -114,13 +109,13 @@ if($type == 1){
 ?>
 ```
 
-There is no implemented authentication to exportUser.php file, we have successfully achieve "unauthenticated" code execution. 
+There is no implemented authentication to exportUser.php file, we have successfully achieved "unauthenticated" code execution. 
 
-With crafted request like below:
+With a crafted request like below:
 
 `hxxp://theSuspect:8181/include/exportUser.php?type=3&cla=application&fun=exec&opt=whoami&echo "erkan" > test.txt`
 
-After executing this request, we have a file named "test.txt" in "/include" directory of device including output of the "whoami" command and "erkan" string.
+After executing this request, we have a file named "test.txt" in the "/include" directory of the device including the output of the "whoami" command and "erkan" string.
 
 
 ### Exploitation Example:
@@ -154,7 +149,7 @@ erkan
 
 
 
-When we have a time we will also release the Metasploit Module for the vulnerability too.
+When we have time we will also release the Metasploit Module for the vulnerability too.
 
 We can turn back to our gaming session then. Cya!
 
