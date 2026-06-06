@@ -4,4 +4,4 @@ title: /about
 permalink: /about/
 ---
 
-this blog will cover application security and iot security research topics.
+writing about vulnerability research and my personal experiences
